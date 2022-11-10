@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "scrapper"
+version = "0.1.0"
+description = ""
+authors = ["Benjamín Vicente <benjavicente@uc.cl>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+scrapy-playwright = "^0.0.22"
+
+[tool.poetry.dev-dependencies]
+black = "^22.10.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"

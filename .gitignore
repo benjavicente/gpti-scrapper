@@ -1,0 +1,9 @@
+/.scrapy
+/.venv
+/dump
+/data
+/img
+/*.json
+/*.png
+__pycache__
+*.py[cod]
