@@ -18,6 +18,7 @@ poetry install
 ## Ejecución
 
 ```bash
-poetry run scrapy crawl jumbo -L INFO -O jumbo.json
-poetry run scrapy crawl lider -L INFO -O lider.json
+poetry run scrapy crawl jumbo -L INFO -O data/jumbo.json
+poetry run scrapy crawl lider -L INFO -O data/lider.json
+poetry run scrapy crawl santaisabel -L INFO -O data/santaisabel.json
 ```

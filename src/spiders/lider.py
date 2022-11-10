@@ -10,7 +10,10 @@ install_reactor("twisted.internet.asyncioreactor.AsyncioSelectorReactor")
 
 
 class Lider(SpiderWithPlayRight):
-    start_urls = ["https://www.lider.cl/supermercado/category/Despensa/Pastas_y_Salsas?page=1&hitsPerPage=100"]
+    start_urls = [
+        "https://www.lider.cl/supermercado/category/Despensa/Pastas_y_Salsas?page=1&hitsPerPage=100",
+        "https://www.lider.cl/supermercado/category/Despensa/Conservas?page=1&hitsPerPage=100",
+    ]
 
     async def parse(self, response: Response):
         self.logger.info(f"Parseando {response.url}")
@@ -19,13 +22,15 @@ class Lider(SpiderWithPlayRight):
 
         # Esperamos que la página esté OK
         try:
-            await page.wait_for_selector(".ais-Hits-list", timeout=10_000)
+            await page.wait_for_selector(".ais-Hits-list", timeout=30_000)
+
         except Exception as e:
             self.logger.info(f"No se cargó la página {response.url}")
             # self.logger.info(e)
             # with open(f"dump/{category}.html", "w") as f:
             #     f.write(await page.content())
-            # await page.screenshot(path=f"img/{category}.png", full_page=True)
+            await page.screenshot(path=f"img/{category}.png", full_page=True)
+            await page.close()
             return
 
         # Obtenemos los productos de la página actual
@@ -50,13 +55,14 @@ class Lider(SpiderWithPlayRight):
         pagination_btns = await page.query_selector_all(".ais-Pagination-list .ais-Pagination-item--page")
         current_url = urlparse(response.url)
         pagination_query = parse_qs(current_url.query)
-        for i in range(1, len(pagination_btns)):
+        for i in range(0, len(pagination_btns)):
             pagination_query["page"] = [str(i + 1)]
             url = current_url._replace(query=urlencode(pagination_query, doseq=True))
             yield response.follow(url.geturl(), **self.make_request_kwargs())
 
         # Vemos si nos falta una categoría
         categories = await page.query_selector_all("a.sister-categories")
+        pagination_query["page"] = [str(1)]
         for category in categories:
             href = await category.get_attribute("href")
             new_url = urlparse(href)._replace(query=urlencode(pagination_query, doseq=True))

@@ -18,7 +18,7 @@ NEWSPIDER_MODULE = "src.spiders"
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 4
+CONCURRENT_REQUESTS = 3
 # PLAYWRIGHT_MAX_PAGES_PER_CONTEXT = 4
 
 # Configure a delay for requests for the same website (default: 0)
@@ -99,6 +99,7 @@ DOWNLOAD_HANDLERS = {
     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
 }
 
+FEED_EXPORT_ENCODING = "utf-8"
 
 DEPTH_LIMIT = 10
 DOWNLOAD_DELAY = 0.5
