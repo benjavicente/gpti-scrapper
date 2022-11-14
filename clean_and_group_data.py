@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import TypedDict
 
 categories = [
-    ["pasta", ["spaghetti", "macaroni", "lasagna", "rigati", "tallarines", "corbatas"]],
+    ["caldo", ["caldo", "sopa"]],
+    ["pasta", ["espirales", "spaghetti", "macaroni", "fideos", "lasagna", "rigati", "tallarines", "corbatas"]],
     ["salsa", ["tomate", "alfredo", "pesto", "salsa"]],
     ["arroz", ["arroz"]],
     ["aceite", ["aceite"]],
@@ -46,18 +47,18 @@ def transform_price(price: str, name: str):
     if "x" in price_str:
         units, _, price_str = price_str.partition("x")
         amount *= int(units)
+        current_name += f" x {units}"
 
     if (match := amount_re.search(current_name)) is not None:
         if match.group(2) in ("kg", "l"):
             amount *= 1000
         amount *= float(match.group(1))
-        current_name = current_name.replace(match.group(0), "").strip(" ,")
         is_in_unit = True
 
     return {
         "name": current_name,
-        "price": int(price_str),
-        "cost": int(float(price_str) / amount),
+        "price": float(price_str),
+        "cost": float(price_str) / amount,
         "is_in_unit": is_in_unit,
     }
 
@@ -87,7 +88,7 @@ def main():
         with data_file.open() as f:
             for product_data in json.load(f):
                 category, clean_data = get_category_and_clean(product_data, data_file.stem)
-                if category is not None:
+                if category is not None and clean_data["price"] > 0:
                     analyzed_products_count += 1
                     grouped_by_category[category].append(clean_data)
 
