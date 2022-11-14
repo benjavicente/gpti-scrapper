@@ -2,6 +2,7 @@
 /.venv
 /dump
 /data
+/data-clean
 /img
 /*.json
 /*.png
